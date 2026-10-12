@@ -82,19 +82,36 @@ runs:
         path: ~/.local/share/godot/export_templates/
         key: ${{ runner.os }}-godot-${{ inputs.godot-version }}-export-templates
 
+    # - name: Download and extract templates
+    #   shell: bash
+    #   if: steps.check-custom-build.outputs.exists != 'true' && steps.cache-export-templates.outputs.cache-hit != 'true'
+    #   run: |
+    #     TEMPLATES_URL="https://github.com/godotengine/godot-builds/releases/download/${{ inputs.godot-version }}-${{ inputs.godot-channel}}/Godot_v${{ inputs.godot-version }}-${{ inputs.godot-channel }}_export_templates.tpz"
+    #     wget -q "${TEMPLATES_URL}" -O templates.tpz
+    #     unzip -q templates.tpz
+        
+    #     TEMPLATE_DIR="~/.local/share/godot/export_templates/${{ inputs.godot-version }}.${{ inputs.godot-channel }}"
+    #     mkdir -p "${TEMPLATE_DIR}"
+
+    #     mv templates/* "${TEMPLATE_DIR}/"
+    #     rm -rf templates templates.tpz
+
     - name: Download and extract templates
       shell: bash
       if: steps.check-custom-build.outputs.exists != 'true' && steps.cache-export-templates.outputs.cache-hit != 'true'
       run: |
-        TEMPLATES_URL="https://github.com/godotengine/godot-builds/releases/download/${{ inputs.godot-version }}-${{ inputs.godot-channel}}/Godot_v${{ inputs.godot-version }}-${{ inputs.godot-channel }}_export_templates.tpz"
+        TEMPLATES_URL="https://github.com/godotengine/godot-builds/releases/download/${{ inputs.godot-version }}-${{ inputs.godot-channel }}/Godot_v${{ inputs.godot-version }}-${{ inputs.godot-channel }}_export_templates.tpz"
         wget -q "${TEMPLATES_URL}" -O templates.tpz
         unzip -q templates.tpz
         
-        TEMPLATE_DIR="~/.local/share/godot/export_templates/${{ inputs.godot-version }}.${{ inputs.godot-channel }}"
+        # Ensure the correct path uses $HOME instead of ~ for reliable bash expansion
+        TEMPLATE_DIR="$HOME/.local/share/godot/export_templates/${{ inputs.godot-version }}.${{ inputs.godot-channel }}"
         mkdir -p "${TEMPLATE_DIR}"
 
+        # Godot templates zip extracts into a folder named 'templates'
         mv templates/* "${TEMPLATE_DIR}/"
         rm -rf templates templates.tpz
+
 
     - name: Configure Godot Editor settings
       shell: bash
