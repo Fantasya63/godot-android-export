@@ -119,9 +119,9 @@ runs:
       shell: bash
       run: |
         if [ "${{ inputs.export-mode }}" == "debug" ]; then
-          godot --headless --path "${{ inputs.working-directory }}" --export-debug "${{ inputs.export-type }}"
+          godot --headless --path "${{ inputs.working-directory }}" --export-debug Android
         else
-          godot --headless --path "${{ inputs.working-directory }}" --export-release "${{ inputs.export-type }}"
+          godot --headless --path "${{ inputs.working-directory }}" --export-release Android
         fi
     # - name: Set Android SDK path in Godot Editor settings
     #   shell: bash
